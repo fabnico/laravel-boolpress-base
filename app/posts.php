@@ -14,4 +14,7 @@ class posts extends Model
    public function postPostInfo(){
       return $this->hasOne('App\posts_info', 'post_id');
    }
+   public function  post_tag(){
+      return $this->belongsToMany('App\tags', 'posttag', 'post_id', 'tag_id');
+   }
 }
