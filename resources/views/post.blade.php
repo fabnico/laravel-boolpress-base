@@ -37,7 +37,8 @@
                      @method('DELETE')
                      <button type="submit">Elimina post</button>
                   </form>
-            </td>
+               </td>
+               <td><a href="{{route('post.edit', $post->id)}}">Modifica post</a></td>
 
              </tr>
            @endforeach

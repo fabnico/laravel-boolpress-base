@@ -74,7 +74,7 @@ class PostController extends Controller
     public function show($id)
     {
       $post = Posts::find($id);
-      return view('single_post', compact('post'));
+      return view('post_show', compact('post'));
     }
 
     /**
@@ -85,7 +85,11 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+      $post = Posts::find($id);
+      $tags = Tags::all();
+      $categorie = Categories::all();
+
+      return view('post_edit', compact(['post','tags', 'categorie']));
     }
 
     /**
@@ -97,7 +101,25 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+     $data = $request->all();
+
+     $vecchio_post = Posts::find($id);
+
+     $vecchio_post->post_tag()->detach();
+
+     $vecchio_post->title = $data['title'];
+     $vecchio_post->author = $data['author'];
+     $vecchio_post->category_id = $data['category_id'];
+
+     $vecchio_post->save();
+
+     $vecchio_post->post_post_info->description = $data['description'];
+
+     $vecchio_post->post_post_info->save();
+
+     $vecchio_post->post_tag()->attach($data['tags']);
+
+     return redirect()->route('post.index');
     }
 
     /**
