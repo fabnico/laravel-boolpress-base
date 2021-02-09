@@ -23,7 +23,7 @@
           <label for="categoria">Categoria</label>
           <select name="category_id" class="form-control">
             @foreach ($categorie as $categoria)
-              <option value="{{$categoria->id}}">
+              <option @if ($post->post_cat->id == $categoria->id) selected @endif value="{{$categoria->id}}">
                   {{$categoria->title}}
               </option>
            @endforeach
@@ -38,7 +38,7 @@
           @foreach($tags as $tag)
             <div>
                 <label for="tags">{{$tag->name}}</label>
-                <input type="checkbox" name="tags[]" value="{{$tag->id}}">
+                <input @if ($post->post_tag->contains($tag)) checked  @endif type="checkbox" name="tags[]" value="{{$tag->id}}">
             </div>
          @endforeach
         </div>

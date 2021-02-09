@@ -31,7 +31,7 @@ class PostController extends Controller
       $tags = Tags::all();
       $categorie = Categories::all();
 
-      return view('post_create', compact(['tags', 'categorie']));
+      return view('post_create', compact('tags', 'categorie'));
     }
 
     /**
@@ -89,7 +89,7 @@ class PostController extends Controller
       $tags = Tags::all();
       $categorie = Categories::all();
 
-      return view('post_edit', compact(['post','tags', 'categorie']));
+      return view('post_edit', compact('post','tags', 'categorie'));
     }
 
     /**
@@ -131,16 +131,13 @@ class PostController extends Controller
     public function destroy($id)
     {
       $post = Posts::find($id);
+      $tags = Tags::all();
 
       $post->post_post_info->delete();
 
-      foreach ($post->post_tag as $tag) {
-        $post->post_tag()->detach($tag->id);
-      }
-
+      $post->post_tag()->detach($tags);
       $post->delete();
 
       return redirect()->route('post.index');
-
     }
 }
