@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\posts;
-use App\categories;
+use App\Posts;
+use App\Tags;
+use App\Categories;
+use App\Posts_info;
 
-class postController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +17,7 @@ class postController extends Controller
      */
     public function index()
     {
-      $posts = posts::all();
+      $posts = Posts::all();
       return view('post', compact('posts'));
     }
 
@@ -26,7 +28,10 @@ class postController extends Controller
      */
     public function create()
     {
-        //
+      $tags = Tags::all();
+      $categorie = Categories::all();
+
+      return view('post_create', compact(['tags', 'categorie']));
     }
 
     /**
@@ -37,7 +42,27 @@ class postController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $data = $request->all();
+
+      $nuovo_post = new Posts();
+      $nuovo_post_info = new Posts_info();
+
+      $nuovo_post->title = $data['title'];
+      $nuovo_post->author = $data['author'];
+      $nuovo_post->category_id = $data['category_id'];
+      $nuovo_post_info->description = $data['description'];
+      $nuovo_post_info->slug = 'example';
+
+      $nuovo_post->save();
+
+      $nuovo_post_info->post_id = $nuovo_post->id;
+
+      $nuovo_post_info->save();
+
+      $nuovo_post->post_tag()->attach($data['tags']);
+
+      return redirect()->route('post.index');
+
     }
 
     /**
@@ -48,7 +73,8 @@ class postController extends Controller
      */
     public function show($id)
     {
-        //
+      $post = Posts::find($id);
+      return view('single_post', compact('post'));
     }
 
     /**
@@ -82,6 +108,17 @@ class postController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $post = Posts::find($id);
+
+      $post->post_post_info->delete();
+
+      foreach ($post->post_tag as $tag) {
+        $post->post_tag()->detach($tag->id);
+      }
+
+      $post->delete();
+
+      return redirect()->route('post.index');
+
     }
 }

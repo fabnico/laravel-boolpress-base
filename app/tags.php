@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tags extends Model
+class Tags extends Model
 {
    protected $table = 'tags';
 
-   public function  tagpost(){
-      return $this->belongsToMany('App\posts', 'posttag', 'tag_id', 'post_id');
+   public function  tag_post(){
+      return $this->belongsToMany('App\Posts', 'posttag', 'tag_id', 'post_id');
    }
 }

@@ -11,22 +11,34 @@
         <thead>
           <tr>
                <th scope="col">Titolo</th>
+               <th scope="col">Autore</th>
                <th scope="col">Categoria</th>
                <th scope="col">Descrizione</th>
                <th scope="col">Tag</th>
+               <a href="{{route('post.create')}}">Crea un nuovo post</a>
           </tr>
         </thead>
         <tbody>
            @foreach($posts as $post)
              <tr>
                 <td>{{ $post->title}}</td>
-                <td>{{ $post->postCat->title}}</td>
-                <td>{{ $post->postPostInfo->description}}</td>
+                <td>{{ $post->author}}</td>
+                <td>{{ $post->post_cat->title}}</td>
+                <td>{{ $post->post_post_info->description}}</td>
                 <td>
                    @foreach ($post->post_tag as $tag)
                      {{$tag->name}}
                    @endforeach
                 </td>
+                <td><a href="{{route('post.show', $post->id)}}">Dettagli post</a></td>
+                <td>
+                   <form action="{{route('post.destroy', $post->id)}}" method="POST">
+                     @CSRF
+                     @method('DELETE')
+                     <button type="submit">Elimina post</button>
+                  </form>
+            </td>
+
              </tr>
            @endforeach
         </tbody>
